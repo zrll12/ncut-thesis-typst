@@ -5,6 +5,9 @@
   college: "信息学院", major: "计算机科学与技术", author: "张三",
   student-id: "202200000000", supervisor: "李四", external-supervisor: "无",
   date: "2026年6月1日",
+  // 可设为课程名称；header: none 关闭页眉。
+  header: [北方工业大学本科生学士学位论文（毕业设计）],
+  // 未传入的声明不生成页面。按学院要求填写：declaration: [完整声明正文],
   abstract: [此处填写中文摘要。摘要应简明、确切地展示论文核心内容，说明研究目的、方法、结果与结论，重点突出结果和结论。中文摘要一般为300～1000字。本段仅为模板填写提示，提交前应替换为真实研究摘要。],
   keywords: ("学位论文", "排版方法", "自动编号"),
   abstract-en: [Replace this paragraph with an English abstract corresponding to the Chinese abstract. Present the purpose, methods, results, and conclusions of the research. This is sample text for demonstrating the template.],

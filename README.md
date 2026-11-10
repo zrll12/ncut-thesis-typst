@@ -2,6 +2,42 @@
 
 北方工业大学本科生学士学位论文（毕业设计）Typst 非官方模板，依据2026版写作规范。
 
+## 课程论文与可选内容
+
+`declaration`、`abstract`、`keywords`、`abstract-en`、`keywords-en` 和 `title-en` 默认均为 `none`。省略参数或设为 `none` 即不显示；空字符串、空内容 `[]`、空关键词数组 `()` 也会省略。不会输出“无”字样、占位说明或空白页。中文与英文关键词使用字符串数组，例如 `("关键词一", "关键词二")`。
+
+中英文摘要和关键词独立控制：仅填关键词时，仅显示关键词；两者均为空时不生成该语言摘要页。英文题名为空时，封面不留英文题名行，英文摘要页也不显示空题名块。填写了声明时才显示声明标题、正文和签名区域。
+
+`header` 默认仍为学校学位论文页眉，可设为字符串或内容块；设为 `none`、`""` 或 `[]` 关闭。页眉仍只从正文开始。
+
+课程论文可直接编辑 `course.typ`：
+
+```sh
+typst compile --font-path fonts course.typ course.pdf
+```
+
+也可在自己的入口中配置：
+
+```typst
+#import "template.typ": *
+#show: thesis.with(
+  title: "课程论文题目",
+  author: "张三",
+  declaration: none,
+  abstract: none,
+  keywords: none,
+  abstract-en: none,
+  keywords-en: none,
+  title-en: none,
+  header: [数据库原理课程论文], // 不需要页眉时改为 none。
+)
+
+= 引言
+正文内容。
+```
+
+课程论文按任课教师要求选择前置材料；正式学位论文仍需补齐学校规范规定的必备材料。
+
 ## 从 GitHub 开始
 
 ```sh
@@ -57,7 +93,7 @@ typst compile main.typ thesis.pdf
 typst watch main.typ thesis.pdf
 ```
 
-也可将这三个文件上传到 Typst 网页项目，选择 main.typ 为入口。已在本机 Typst 0.15.1 编译通过，示例共11页。
+也可将这三个文件上传到 Typst 网页项目，选择 main.typ 为入口。已在本机 Typst 0.15.1 编译通过，示例共10页。
 
 字体：正文需要宋体（SimSun）与 Times New Roman，标题需要黑体。模板黑体优先使用本机 STHeiti，回退到 Heiti SC；宋体缺失时回退到 Songti SC。Windows 用户可将 template.typ 的 hei 改成 `("Times New Roman", "SimHei")`。严格提交时，请使用学院认可的宋体、黑体字体，并在 Typst 中配置正确的字体名称；字体文件不随模板分发。数学字体保留 Typst 默认数学字体，避免用不支持数学排版的正文字体替换。
 
@@ -67,11 +103,11 @@ typst watch main.typ thesis.pdf
 | --- | --- |
 | 页面 | A4；上、左25.4 mm；下、右20.5 mm |
 | 题名页 | 中英文题名22 pt；信息黑体22 pt；题名及信息行距37 pt；提交日期到日 |
-| 前置部分 | 题名页、声明、中英文摘要、目录依次独立分页；默认不显示页码和页眉 |
+| 前置部分 | 题名页、可选声明及中英文摘要、目录依次独立分页；前置部分不显示页码和页眉 |
 | 正文 | 宋体12 pt，数字及西文 Times New Roman，首行缩进2字，采用23.4 pt基线间距（中文Word行距兼容设置） |
 | 标题 | 章标题16 pt，节、条标题14 pt；左顶格；每章另页；编号1、1.1、1.1.1 |
 | 目录 | 自动生成至三级，12 pt；逐级缩进0、1、2字符，点引导线，页码右对齐 |
-| 页眉页码 | 自正文开始固定页眉9 pt；正文页码从1开始，页底居中10.5 pt，后置部分接续 |
+| 页眉页码 | 自正文开始可自定义或关闭页眉9 pt；正文页码从1开始，页底居中10.5 pt，后置部分接续 |
 | 图 | 按章编号；图题在下，黑体9 pt，题前6 pt，图号后空2字宽 |
 | 表 | 按章编号；表题在上，黑体10.5 pt，题后6 pt；表内9 pt；三线表1.5/0.5/1.5 pt |
 | 公式 | 居中，右侧按章编号（2.1）；自动引用 |
@@ -108,7 +144,7 @@ Typst行距参数说明：[Paragraph](https://typst.app/docs/reference/model/par
 
 ### 声明文本
 
-原规范只说明应有原创性声明及使用授权说明，没有附固定文本。模板明确使用占位内容；请向学院取得完整文本并通过 `declaration: [完整声明文本]` 传入 thesis.with，再按学院要求签字。模板中的签名位置和声明标题版式属于实现选择。
+原规范只说明应有原创性声明及使用授权说明，没有附固定文本。未填写时不生成声明页；请向学院取得完整文本并通过 `declaration: [完整声明文本]` 传入 thesis.with，再按学院要求签字。模板中的签名位置和声明标题版式属于实现选择。
 
 ## 提交前核对
 
@@ -122,7 +158,8 @@ Typst行距参数说明：[Paragraph](https://typst.app/docs/reference/model/par
 
 ## 文件
 
-- main.typ：个人信息、示例正文和参考文献，主要编辑入口。
+- main.typ：学位论文示例入口，含中英文摘要与关键词。
+- course.typ：课程论文入口，省略声明、摘要、关键词和英文题名，使用课程页眉。
 - template.typ：可复用样式及辅助函数。
 - cover.typ：独立封面样式。
 - example.pdf：已编译的版式演示。

@@ -2,8 +2,9 @@
 // 北方工业大学本科论文模板，依据教字〔2026〕10号。
 #let song = ("Times New Roman", "SimSun", "Songti SC")
 #let hei = ("Times New Roman", "STHeiti", "Heiti SC")
+#let has-content(value) = value != none and value != "" and value != [] and value != ()
 #let chapter-number() = counter(heading).get().first()
-#let thesis(title: "", title-en: "", college: "", major: "", author: "", student-id: "", supervisor: "", external-supervisor: "无", date: "", body-line-height: 23.4pt, declaration: none, abstract: [], keywords: (), abstract-en: [], keywords-en: (), body) = {
+#let thesis(title: "", title-en: none, college: "", major: "", author: "", student-id: "", supervisor: "", external-supervisor: "无", date: "", body-line-height: 23.4pt, declaration: none, abstract: none, keywords: none, abstract-en: none, keywords-en: none, header: [北方工业大学本科生学士学位论文（毕业设计）], body) = {
   set document(title: title, author: author)
   set page(paper: "a4", margin: (top: 2.54cm, bottom: 2.05cm, left: 2.54cm, right: 2.05cm), numbering: none)
   set text(font: song, size: 12pt, lang: "zh", top-edge: .8em, bottom-edge: -.2em)
@@ -54,28 +55,37 @@
   cover(title: title, title-en: title-en, college: college, major: major,
     author: author, student-id: student-id, supervisor: supervisor,
     external-supervisor: external-supervisor, date: date)
-  pagebreak()
-  align(center, text(font: hei, size: 16pt)[原创性声明及使用授权说明])
-  v(18pt)
-  if declaration == none {
-    [【请替换为学院确认的原创性声明及使用授权说明全文。此处为占位内容，不是学校公布的声明文本。】]
-  } else { declaration }
-  v(24pt)
-  [作者签名：#h(35mm) 日期：#h(30mm)]
-  pagebreak()
-  // 中文规范未指定另设“中文摘要”页标题，仅保留摘要前缀。
-  [#text(font: hei)[摘要：]#abstract]
-  v(18pt)
-  [#text(font: hei)[关键词：]#keywords.join("；")]
-  pagebreak()
-  align(center, text(font: "Times New Roman", size: 22pt, weight: "bold", title-en))
-  v(18pt)
-  block[
-    #set text(font: "Times New Roman", lang: "en")
-    #strong[Abstract:] #abstract-en
-    #v(18pt)
-    #strong[Keywords:] #keywords-en.join("; ")
-  ]
+  if has-content(declaration) {
+    pagebreak()
+    align(center, text(font: hei, size: 16pt)[原创性声明及使用授权说明])
+    v(18pt)
+    declaration
+    v(24pt)
+    [作者签名：#h(35mm) 日期：#h(30mm)]
+  }
+  if has-content(abstract) or has-content(keywords) {
+    pagebreak()
+    if has-content(abstract) { [#text(font: hei)[摘要：]#abstract] }
+    if has-content(keywords) {
+      if has-content(abstract) { v(23.4pt) }
+      [#text(font: hei)[关键词：]#keywords.join("；")]
+    }
+  }
+  if has-content(abstract-en) or has-content(keywords-en) {
+    pagebreak()
+    if has-content(title-en) {
+      align(center, text(font: "Times New Roman", size: 22pt, weight: "bold", title-en))
+      v(18pt)
+    }
+    block[
+      #set text(font: "Times New Roman", lang: "en")
+      #if has-content(abstract-en) { [#strong[Abstract:] #abstract-en] }
+      #if has-content(keywords-en) {
+        if has-content(abstract-en) { v(23.4pt) }
+        [#strong[Keywords:] #keywords-en.join("; ")]
+      }
+    ]
+  }
   pagebreak()
   align(center, text(font: hei, size: 12pt)[目录])
   show outline.entry: it => {
@@ -89,7 +99,7 @@
   outline(title: none, depth: 3, indent: 0pt)
   pagebreak()
   counter(page).update(1)
-  set page(numbering: "1", number-align: center, header: align(center, text(font: ("SimSun", "Songti SC"), size: 9pt)[北方工业大学本科生学士学位论文（毕业设计）]), footer: context align(center, text(font: song, size: 10.5pt, counter(page).display("1"))))
+  set page(numbering: "1", number-align: center, header: if has-content(header) { align(center, text(font: ("SimSun", "Songti SC"), size: 9pt, header)) } else { none }, footer: context align(center, text(font: song, size: 10.5pt, counter(page).display("1"))))
   body
 }
 
