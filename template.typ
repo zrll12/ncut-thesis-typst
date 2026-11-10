@@ -113,16 +113,16 @@
   super(link(label("bib-" + key), [\[#(n + 1)\]]))
 }
 #let cite-ref(key) = { metadata((type: "ncut-cite", key: key)); reference(key) }
-#let references(entries) = {
+#let references(entries, line-height: 20.475pt) = {
   back-heading("参考文献", size: 10.5pt)
   context {
     let cites = query(metadata).filter(m => type(m.value) == dictionary and m.value.at("type", default: "") == "ncut-cite")
     let keys = cites.map(m => m.value.key).dedup()
-    set text(font: song, size: 10.5pt)
-    set par(first-line-indent: (amount: 0pt, all: true), leading: .5em, spacing: .5em)
+    set text(font: song, size: 10.5pt, top-edge: 8.4pt, bottom-edge: -2.1pt)
+    set par(first-line-indent: 0pt, leading: line-height - 10.5pt, spacing: 0pt)
     for (i, key) in keys.enumerate() {
       assert(key in entries, message: "references 中缺少文献：" + key)
-      block(above: 0pt, below: 0pt)[#metadata(key)#label("bib-" + key)#grid(columns: (2em, 1fr), [\[#(i + 1)\]], entries.at(key))]
+      block(width: 100%, above: 0pt, below: 0pt, inset: (bottom: line-height - 10.5pt))[#metadata(key)#label("bib-" + key)#grid(columns: (21pt, 1fr), par[\[#(i + 1)\]], par(entries.at(key)))]
     }
   }
 }
